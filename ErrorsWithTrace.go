@@ -1,3 +1,6 @@
+//! To use this, wrap every error return with `WithStack`
+//! To enable stack traces set `SHOW_ERROR_STACK_TRACES` environment variable to `true`
+
 package utils
 
 import (
@@ -35,3 +38,4 @@ var WithStack = func () func (err error) error {
     return err
   }
 }()
+

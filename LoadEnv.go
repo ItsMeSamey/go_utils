@@ -1,3 +1,8 @@
+//! Call Load(<filename>, os.Setenv), eg `Load(".env", os.Setenv)`
+//!
+//! You can use custom setter for logging, for example to print env vars that are being set, use
+//!   Load(<filename>, func (k, v string) error { fmt.Println("Set: ", k, ":=", v); return os.Getenv(k, v) })
+
 package utils
 
 import (
@@ -9,8 +14,6 @@ import (
 )
 
 // Loads the provided env file.
-//
-// eg: `Load(".env", os.Setenv)`
 func Load(file string, setter func (k, v string) error) error {
   // BytesToString converts a slice of bytes to string without memory allocation.
   BytesToString := func (b []byte) string {
