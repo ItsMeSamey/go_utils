@@ -6,19 +6,18 @@ import (
   "runtime"
 )
 
-// This works because "hosmas/utils/env"'s init is called first
+// when this is true, errors will have stack trace
+// changing this to `const show = false` should eliminate any performance penalty
 var show = os.Getenv("SHOW_ERROR_STACK_TRACES") == "true"
 
 // Max size of the stak trace
 const maxTraceLen = 1024 * 16
 
-// error interface
-type errorWithStack struct { error }
 
 // init funcction that is called automatically
-func init() {
-  if !show { runtime.StartTrace() }
-}
+func init() { if !show { runtime.StartTrace() } }
+
+type errorWithStack struct { error }
 
 // Done this way to reduce cost when `show` is false
 
@@ -27,11 +26,12 @@ var WithStack = func () func (err error) error {
   if !show { return func (err error) error { return err } }
 
   return func (err error) error {
-    if _, ok := err.(errorWithStack); err == nil || ok { return err }
+    if err == nil { return nil }
+    if _, ok := err.(errorWithStack); ok { return err }
+
     out := make([]byte, maxTraceLen, maxTraceLen)
     // runtime.Stack is called with all = false to prevent world stopping!
     err = errorWithStack{ errors.New(err.Error() + "\n-- STACK --\n" + string(out[:runtime.Stack(out, false)])) }
     return err
   }
 }()
-
