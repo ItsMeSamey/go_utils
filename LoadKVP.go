@@ -1,7 +1,10 @@
+//! To load a .env file
 //! Call Load(<filename>, os.Setenv), eg `Load(".env", os.Setenv)`
 //!
 //! You can use custom setter for logging, for example to print env vars that are being set, use
 //!   Load(<filename>, func (k, v string) error { fmt.Println("Set: ", k, ":=", v); return os.Getenv(k, v) })
+//!
+//! or you can use this to load config options as well
 
 package utils
 

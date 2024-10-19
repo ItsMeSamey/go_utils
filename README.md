@@ -3,7 +3,7 @@ The code is the documentation
 
 File | Feature
 --- | ---
-[LoadEnv](LoadEnv.go) | Load enviornment variables from a file (eg. `.env`)
+[LoadKVP](./LoadKVP.go) Load key value pair file, intended use is as a `.env` loader
 [ErrorsWithTrace](./ErrorsWithTrace.go) | Errors with stack traces (that can be disabled)
 
 
