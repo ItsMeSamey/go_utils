@@ -4,6 +4,6 @@ The code is the documentation
 File | Feature
 --- | ---
 [LoadEnv](LoadEnv.go) | Load enviornment variables from a file (eg. `.env`)
-[ErrorsWithTrace](./ErrorsWithTrace.go) | Errors with stack trace (that can be disabled)
+[ErrorsWithTrace](./ErrorsWithTrace.go) | Errors with stack traces (that can be disabled)
 
 
