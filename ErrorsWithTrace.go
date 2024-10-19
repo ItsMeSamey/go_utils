@@ -20,7 +20,7 @@ const maxTraceLen = 1024 * 16
 // init funcction that is called automatically
 func init() { if !show { runtime.StartTrace() } }
 
-type errorWithStack struct { error }
+type ErrorWithStack struct { error }
 
 // Done this way to reduce cost when `show` is false
 
@@ -30,11 +30,11 @@ var WithStack = func () func (err error) error {
 
   return func (err error) error {
     if err == nil { return nil }
-    if _, ok := err.(errorWithStack); ok { return err }
+    if _, ok := err.(ErrorWithStack); ok { return err }
 
     out := make([]byte, maxTraceLen, maxTraceLen)
     // runtime.Stack is called with all = false to prevent world stopping!
-    err = errorWithStack{ errors.New(err.Error() + "\n-- STACK --\n" + string(out[:runtime.Stack(out, false)])) }
+    err = ErrorWithStack{ errors.New(err.Error() + "\n-- STACK --\n" + string(out[:runtime.Stack(out, false)])) }
     return err
   }
 }()
