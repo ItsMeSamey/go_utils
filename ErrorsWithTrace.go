@@ -5,6 +5,7 @@ package utils
 
 import (
   "os"
+  "unsafe"
   "errors"
   "runtime"
 )
@@ -34,7 +35,7 @@ var WithStack = func () func (err error) error {
 
     out := make([]byte, maxTraceLen, maxTraceLen)
     // runtime.Stack is called with all = false to prevent world stopping!
-    err = ErrorWithStack{ errors.New(err.Error() + "\n-- STACK --\n" + string(out[:runtime.Stack(out, false)])) }
+    err = ErrorWithStack{ errors.New(err.Error() + "\n-- STACK --\n" + unsafe.String(unsafe.SliceData(out), runtime.Stack(out, false))) }
     return err
   }
 }()

@@ -29,6 +29,8 @@ func Load(file string, setter func (k, v string) error) error {
   }
 
   for _, line := range bytes.Split(data, []byte{'\n'}) {
+    line = bytes.TrimPrefix(line, []byte{' '})
+    if line[0] == '#' { continue }
     i := bytes.IndexByte(line, '=')
     if i == -1 || i+1 >= len(line) { continue }
 
