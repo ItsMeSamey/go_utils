@@ -6,7 +6,6 @@ package utils
 import (
   "os"
   "unsafe"
-  "errors"
   "runtime"
 )
 
@@ -21,7 +20,15 @@ const maxTraceLen = 1024 * 16
 // init funcction that is called automatically
 func init() { if !show { runtime.StartTrace() } }
 
-type ErrorWithStack struct { error }
+type ErrorWithStack struct {
+  current     string
+  originalLen int
+  original    error
+}
+
+func (e ErrorWithStack) Error() string { return e.current }
+func (e ErrorWithStack) Unwrap() error { return e.original }
+func (e ErrorWithStack) WithoutStack() string { return e.current[:e.originalLen] }
 
 // Done this way to reduce cost when `show` is false
 
@@ -34,9 +41,12 @@ var WithStack = func () func (err error) error {
     if _, ok := err.(ErrorWithStack); ok { return err }
 
     out := make([]byte, maxTraceLen, maxTraceLen)
-    // runtime.Stack is called with all = false to prevent world stopping!
-    err = ErrorWithStack{ errors.New(err.Error() + "\n-- STACK --\n" + unsafe.String(unsafe.SliceData(out), runtime.Stack(out, false))) }
-    return err
+    originalString := err.Error()
+    return ErrorWithStack{
+      current: originalString + "\n##-STACK-##\n" + unsafe.String(unsafe.SliceData(out), runtime.Stack(out, false)),
+      originalLen: len(originalString),
+      original: err,
+    }
   }
 }()
 
