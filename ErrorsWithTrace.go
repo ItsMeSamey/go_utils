@@ -49,10 +49,10 @@ func SetErrorStackTrace(showTrace bool) {
 
   if show {
     runtime.StartTrace()
-    WithStack = noStack
-  } else {
-    runtime.StopTrace()
     WithStack = withStack
+  } else {
+    WithStack = noStack
+    runtime.StopTrace()
   }
 }
 
