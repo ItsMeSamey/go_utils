@@ -1,7 +1,7 @@
 package utils
 
 import (
-  "github.com/goccy/go-json"
+  "encoding/json"
 )
 
 type Optional[T any] struct {
